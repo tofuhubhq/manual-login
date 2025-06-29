@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  manual-login:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: manual-login
+    ports:
+      - "3000:3000"
+    volumes:
+      - browser_state:/app/user-data
+    environment:
+      - NODE_ENV=production
+
+    command: npx tsx src/index.ts
+
+volumes:
+  browser_state:
