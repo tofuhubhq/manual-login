@@ -1,0 +1,12 @@
+{
+  "name": "lorawan-postgres-redis-mosquitto-do",
+  "version": "0.0.34",
+  "description": "Deploys a full lorawan stack on DigitalOcean",
+  "repository": "https://github.com/tofuhubhq/lorawan-postgres-redis-mosquitto-do.git",
+  "commit": "1a5045b6ac065cbade6e705c2e74b4b87c08b559",
+  "homepage": "https://tofuhub.co",
+  "author": "Tommaso Girotto",
+  "tags": ["lorawan", "iot", "postgres", "valkey"],
+  "license": "MIT",
+  "type": "agent"
+}
