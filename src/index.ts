@@ -13,9 +13,7 @@ let browserContext: BrowserContext | null;
 let page: any = null;
 
 fastify.post('/start-browser', async (request, reply) => {
-  if (browserContext) {
-    return reply.send({ message: 'Browser already started' });
-  }
+  if (browserContext) return reply.send({ message: 'Browser already started' });
 
   try {
     const userDataDir = './user-data';
@@ -27,7 +25,7 @@ fastify.post('/start-browser', async (request, reply) => {
     });
 
     page = await browserContext.newPage();
-    await page.goto('https://example.com');
+    await page.goto('https://github.com');
     
     return reply.send({ message: 'Browser started' });
   } catch (err) {
@@ -37,9 +35,7 @@ fastify.post('/start-browser', async (request, reply) => {
 });
 
 fastify.post('/stop-browser', async (request, reply) => {
-  if (!browserContext) {
-    return reply.send({ message: 'Browser is not running' });
-  }
+  if (!browserContext) return reply.send({ message: 'Browser is not running' });
 
   try {
     await browserContext.close();
@@ -53,82 +49,82 @@ fastify.post('/stop-browser', async (request, reply) => {
   }
 });
 
-fastify.post('/supabase-github', async (request, reply) => {
-  // if (!browserContext) {
-  //   return reply.send({ message: 'Browser not started' });
-  // }
+// fastify.post('/supabase-github', async (request, reply) => {
+//   // if (!browserContext) {
+//   //   return reply.send({ message: 'Browser not started' });
+//   // }
 
-  try {
+//   try {
     
-    const userDataDir = path.resolve('./user-data') ;
-    // console.info(userDataDir)
-    // const proc = spawn(chromium.executablePath(), [
-    //   `--remote-debugging-port=9222`,
-    //   `--user-data-dir=${userDataDir}`,
-    //   `--no-sandbox`,
-    //   `--disable-dev-shm-usage`,
-    //   `--disable-gpu`,
-    //   `https://supabase.com`
-    // ], {
-    //   stdio: 'ignore',
-    //   detached: true
-    // });
-    // proc.unref(); // 🔑 Let it run independently
+//     const userDataDir = path.resolve('./user-data') ;
+//     // console.info(userDataDir)
+//     // const proc = spawn(chromium.executablePath(), [
+//     //   `--remote-debugging-port=9222`,
+//     //   `--user-data-dir=${userDataDir}`,
+//     //   `--no-sandbox`,
+//     //   `--disable-dev-shm-usage`,
+//     //   `--disable-gpu`,
+//     //   `https://supabase.com`
+//     // ], {
+//     //   stdio: 'ignore',
+//     //   detached: true
+//     // });
+//     // proc.unref(); // 🔑 Let it run independently
     
-    // await waitOn({
-    //   resources: ['http://localhost:9222/json/version'],
-    //   timeout: 5000,
-    //   validateStatus: (status: any) => status === 200,
-    // });
+//     // await waitOn({
+//     //   resources: ['http://localhost:9222/json/version'],
+//     //   timeout: 5000,
+//     //   validateStatus: (status: any) => status === 200,
+//     // });
 
-    // await waitOn({ resources: ['http://localhost:9222'], timeout: 5000 });
+//     // await waitOn({ resources: ['http://localhost:9222'], timeout: 5000 });
 
-    browserContext = await chromium.launchPersistentContext(userDataDir, {
-      headless: false,
-      args: ['--start-maximized'],
-      viewport: null,
-    });
-    // console.info(browserContext)
-    // const bro = browserContext.browser();
+//     browserContext = await chromium.launchPersistentContext(userDataDir, {
+//       headless: false,
+//       args: ['--start-maximized'],
+//       viewport: null,
+//     });
+//     // console.info(browserContext)
+//     // const bro = browserContext.browser();
     
-    // if (!bro) throw new Error("Browser instance is null");
+//     // if (!bro) throw new Error("Browser instance is null");
 
-    console.info(process.env.OPENROUTER_API_KEY)
-    // console.info(`reached here`)
-    const agent = await startBrowserAgent({
-      url: "https://supabase.com/dashboard/project/smltnjrrzkmazvbrqbkq/auth/providers",
-      browser: {
-        context: browserContext
-      },
-      llm: {
-          provider: 'openai-generic',
-          options: {
-              baseUrl: 'https://openrouter.ai/api/v1',
-              model: 'qwen/qwen2.5-vl-72b-instruct',
-              apiKey: process.env.OPENROUTER_API_KEY
-          }
-      }
-    });  
+//     console.info(process.env.OPENROUTER_API_KEY)
+//     // console.info(`reached here`)
+//     const agent = await startBrowserAgent({
+//       url: "https://supabase.com/dashboard/project/smltnjrrzkmazvbrqbkq/auth/providers",
+//       browser: {
+//         context: browserContext
+//       },
+//       llm: {
+//           provider: 'openai-generic',
+//           options: {
+//               baseUrl: 'https://openrouter.ai/api/v1',
+//               model: 'qwen/qwen2.5-vl-72b-instruct',
+//               apiKey: process.env.OPENROUTER_API_KEY
+//           }
+//       }
+//     });  
   
-    // const userDataDir = './user-data';
+//     // const userDataDir = './user-data';
 
-    // browserContext = await chromium.launchPersistentContext(userDataDir, {
-    //   headless: false,
-    //   args: ['--start-maximized'],
-    //   viewport: null,
-    // });
+//     // browserContext = await chromium.launchPersistentContext(userDataDir, {
+//     //   headless: false,
+//     //   args: ['--start-maximized'],
+//     //   viewport: null,
+//     // });
     
-    // doStuff(agent)
-    // console.info(`reached there`)
+//     // doStuff(agent)
+//     // console.info(`reached there`)
     
-    // createGithubApp(agent);
+//     // createGithubApp(agent);
 
-    return reply.send({ message: 'Browser started' });
-  } catch (err) {
-    console.info(err)
-    return reply.status(500).send({ error: 'Failed to start browser' });
-  }
-});
+//     return reply.send({ message: 'Browser started' });
+//   } catch (err) {
+//     console.info(err)
+//     return reply.status(500).send({ error: 'Failed to start browser' });
+//   }
+// });
 
 // const createGithubApp = async (agent: any) => {
 //   await agent.nav(`https://github.com/settings/applications/new`)
