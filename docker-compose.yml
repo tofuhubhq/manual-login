@@ -8,7 +8,7 @@ services:
     container_name: manual-login
     ports:
       - "3000:3000"
-      - "5901:5901"
+      - "6080:6080"
     volumes:
       - browser_state:/app/user-data
     environment:

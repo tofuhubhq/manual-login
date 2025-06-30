@@ -1,5 +1,5 @@
 {
-  "name": "tofuhub-magnitude",
+  "name": "manual-login",
   "type": "module",
   "scripts": {
     "build": "tsc",
