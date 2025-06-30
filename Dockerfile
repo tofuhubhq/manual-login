@@ -1,26 +1,44 @@
-# Use a full-featured Node image since Playwright needs system dependencies
 FROM mcr.microsoft.com/playwright:v1.43.1-jammy
 
-# Set working directory
+# Set environment variables
+ENV DISPLAY=:1 \
+    VNC_RESOLUTION=1280x800 \
+    VNC_COL_DEPTH=24 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install VNC server, window manager, and other tools
+RUN apt-get update && apt-get install -y \
+    x11vnc \
+    xvfb \
+    fluxbox \
+    x11-utils \
+    net-tools \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Create working directory
 WORKDIR /app
 
-# Copy package files first to install deps
+# Copy and install dependencies
 COPY package*.json ./
-
-# Install dependencies (prod + dev)
 RUN npm install
 
-# Install Chromium (as required by playwright)
+# Install Chromium (Playwright)
 RUN npx playwright install chromium
 
-# Copy the rest of the app
+# Copy app files
 COPY . .
 
-# Optional: build step if you decide to transpile later
-# RUN npm run build
+# Expose VNC port
+EXPOSE 5900
 
-# Expose port (adjust if needed)
-EXPOSE 3000
+RUN mkdir -p /root/.vnc && \
+    x11vnc -storepasswd secret /root/.vnc/passwd
 
-# Start using tsx (runs TS directly)
-CMD ["npx", "tsx", "src/index.ts"]
+# Start everything up
+CMD bash -c "\
+  Xvfb :1 -screen 0 ${VNC_RESOLUTION}x${VNC_COL_DEPTH} & \
+  until xdpyinfo -display :1 > /dev/null 2>&1; do echo 'Waiting for Xvfb...'; sleep 0.5; done && \
+  fluxbox & \
+  x11vnc -rfbport 5900 -display :1 -forever -shared -nopw -listen 0.0.0.0 & \
+  sleep 3 && npx tsx src/index.ts"
+
